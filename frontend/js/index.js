@@ -11,11 +11,11 @@ const chatMessages = chat.querySelector(".chat__messages")
 
 const colors = [
     "green",
-    "skyblue",
+    "pink",
     "red",
     "cyan",
-    "navy",
-    "neon"
+    "orange",
+    "yellow"
 ]
 
 const user = { id: "", name: "", color: "" }
@@ -83,7 +83,7 @@ const handleLogin = (event) => {
     login.style.display = "none"
     chat.style.display = "flex"
 
-    websocket = new WebSocket("ws://127.0.0.1:8080")
+    websocket = new WebSocket("wss://chat-em-tempo-real-886t.onrender.com")
     websocket.onmessage = processMessage
 }
 

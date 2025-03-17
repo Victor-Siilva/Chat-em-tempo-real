@@ -12,7 +12,8 @@
 }
 
 body {
-    background: url("../img/walppp.jpg");
+    background: url("../img/walp1.jpg") no-repeat center center fixed;
+    background-size: cover;
     color: #f2f2f2;
 }
 
