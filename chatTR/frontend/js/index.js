@@ -102,6 +102,11 @@ const sendMessage = (event) => {
     chatInput.value = ""
 }
 
+   socket.onerror = function(event) {
+       console.error("WebSocket error observed:", event);
+   };
+   
+
 loginForm.addEventListener("submit", handleLogin)
 chatForm.addEventListener("submit", sendMessage)
 
