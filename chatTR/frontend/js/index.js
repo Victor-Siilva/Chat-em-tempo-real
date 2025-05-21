@@ -20,95 +20,47 @@ const colors = [
 
 const user = { id: "", name: "", color: "" }
 
-let websocket
+// 1. Definindo a variável socket
+let socket;
 
-const createMessageSelfElement = (content) => {
-    const div = document.createElement("div")
+// 2. Função para conectar ao WebSocket
+const connectWebSocket = () => {
+    socket = new WebSocket("wss://chat-em-tempo-real-9iwa.onrender.com/");
+    
+    socket.onopen = () => {
+        console.log("Conexão estabelecida");
+    };
 
-    div.classList.add("message--self")
-    div.innerHTML = content
+    // 3. Aqui você pode processar a mensagem recebida
+    socket.onmessage = (event) => {
+        console.log("Mensagem recebida: ", event.data);
+        // Adicione aqui a lógica para exibir a mensagem no chat
+    };
 
-    return div
-}
+    socket.onerror = (error) => {
+        console.error("Erro no WebSocket: ", error);
+    };
+};
 
-const createMessageOtherElement = (content, sender, senderColor) => {
-    const div = document.createElement("div")
-    const span = document.createElement("span")
-
-    div.classList.add("message--other")
-
-    span.classList.add("message--sender")
-    span.style.color = senderColor
-
-    div.appendChild(span)
-
-    span.innerHTML = sender
-    div.innerHTML += content
-
-    return div
-}
-
-const getRandomColor = () => {
-    const randomIndex = Math.floor(Math.random() * colors.length)
-    return colors[randomIndex]
-}
-
-const scrollScreen = () => {
-    window.scrollTo({
-        top: document.body.scrollHeight,
-        behavior: "smooth"
-    })
-}
-
-const processMessage = ({ data }) => {
-    const { userId, userName, userColor, content } = JSON.parse(data)
-
-    const message =
-        userId == user.id
-            ? createMessageSelfElement(content)
-            : createMessageOtherElement(content, userName, userColor)
-
-    chatMessages.appendChild(message)
-
-    scrollScreen()
-}
-
+// 4. Função para lidar com o login
 const handleLogin = (event) => {
-    event.preventDefault()
+    event.preventDefault();
 
-    user.id = crypto.randomUUID()
-    user.name = loginInput.value
-    user.color = getRandomColor()
+    user.id = crypto.randomUUID();
+    user.name = loginInput.value;
+    user.color = getRandomColor();
 
-    login.style.display = "none"
-    chat.style.display = "flex"
+    login.style.display = "none";
+    chat.style.display = "flex";
 
-    websocket = new WebSocket("wss://chat-em-tempo-real-9iwa.onrender.com/");
-    websocket.onmessage = processMessage
-}
+    // Chame a função de conexão após o login
+    connectWebSocket();
+};
 
-const sendMessage = (event) => {
-    event.preventDefault()
+// Adicione os ouvintes de eventos
+loginForm.addEventListener("submit", handleLogin);
+chatForm.addEventListener("submit", sendMessage);
 
-    const message = {
-        userId: user.id,
-        userName: user.name,
-        userColor: user.color,
-        content: chatInput.value
-    }
-
-    websocket.send(JSON.stringify(message))
-
-    chatInput.value = ""
-}
-
-   socket.onerror = function(event) {
-       console.error("WebSocket error observed:", event);
-   };
-   
-
-loginForm.addEventListener("submit", handleLogin)
-chatForm.addEventListener("submit", sendMessage)
 
 const imageField = document.querySelector("#image-field");
 const imagePreview = document.querySelector("#image-preview");
