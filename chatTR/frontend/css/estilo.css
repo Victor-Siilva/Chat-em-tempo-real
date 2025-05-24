@@ -12,7 +12,7 @@
 }
 
 body {
-    background: url("../img/walp1.jpg");
+    background: url("../img/walp1.jpg") no-repeat center center fixed;
     color: #f2f2f2;
     background-repeat: no-repeat;
     background-size: cover;
